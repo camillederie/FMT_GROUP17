@@ -9,8 +9,8 @@ drawnow;
 filename_ima=filename;
 filename_imb=filename;
 
-filename_ima(find(filename=='.')-1)='1';
-filename_ima(find(filename=='.')-1)='2';
+filename_ima(find(filename=='.')-1)='a';
+filename_ima(find(filename=='.')-1)='b';
 
 ima=flipud(double(imread(filename_ima)));
 imb=flipud(double(imread(filename_imb)));
