@@ -39,6 +39,11 @@ def plot_velocity_field(alpha, dt, mp_sp, resolution, overlap, time_mean=False):
     plt.title(f'Velocity Field: {alpha}, {dt}, {mp_sp}, {resolution}, {overlap}, Time Mean: {time_mean}')
     plt.xlabel('X')
     plt.ylabel('Y')
+    
+    # Save the plot
+    figures_path = os.path.join(os.getcwd(), 'PIV_Group17/Figures')
+    plt.savefig(os.path.join(figures_path, f'velocity_field_{alpha}_{dt}_{mp_sp}_{resolution}_{overlap}_time_mean_{time_mean}.png'))
+    plt.close()
 
 def plot_mean_x_component_vs_y(alpha_values, dt, mp_sp, resolution, overlap, x_target=100):
     """
@@ -60,7 +65,7 @@ def plot_mean_x_component_vs_y(alpha_values, dt, mp_sp, resolution, overlap, x_t
         # Read the data from the file
         data = np.loadtxt(path_file, skiprows=3)
         
-        # Extract the columns for x, y, Vx, Vy
+        # Extract the columns for x, y, Vx
         x, y, Vx = data[:, 0], data[:, 1], data[:, 2]
         
         # Find the indices where x is close to x_target
@@ -70,7 +75,7 @@ def plot_mean_x_component_vs_y(alpha_values, dt, mp_sp, resolution, overlap, x_t
         y_values = y[indices]
         Vx_values = Vx[indices]
         
-        # Plot the mean x component (Vx) vs y distance
+        # Plot the mean x component (Vx) vs y distance as scatter with dashed line
         plt.plot(Vx_values, y_values, 'o--', label=f'{alpha}')
     
     # Customize the plot
@@ -79,12 +84,18 @@ def plot_mean_x_component_vs_y(alpha_values, dt, mp_sp, resolution, overlap, x_t
     plt.xlabel('Mean X Component of Flow (Vx)')
     plt.legend()
     plt.grid(True)
+    
+    # Save the plot
+    figures_path = os.path.join(os.getcwd(), 'PIV_Group17/Figures')
+    plt.savefig(os.path.join(figures_path, f'mean_x_component_vs_y_{dt}_{mp_sp}_{resolution}_{overlap}_x_target_{x_target}.png'))
+    plt.close()
+
 
 plot_velocity_field('0deg', '75microseconds', 'MP', '32x32', '50ov', time_mean=True)
 plot_velocity_field('5deg', '75microseconds', 'MP', '32x32', '50ov', time_mean=True)
 plot_velocity_field('15deg', '75microseconds', 'MP', '32x32', '50ov', time_mean=True)
-# plot_velocity_field('15deg', '6microseconds', 'MP', '32x32', '50ov', time_mean=True)
 
+plot_mean_x_component_vs_y(['0deg', '5deg', '15deg'], '75microseconds', 'MP', '32x32', '50ov', x_target=25)
 plot_mean_x_component_vs_y(['0deg', '5deg', '15deg'], '75microseconds', 'MP', '32x32', '50ov', x_target=100)
 
-plt.show()
+
