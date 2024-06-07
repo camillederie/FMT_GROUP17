@@ -31,14 +31,23 @@ def plot_velocity_field(alpha, dt, mp_sp, resolution, overlap, time_mean=False):
     
     # Calculate the magnitude of the velocity vectors
     velocity_magnitude = np.sqrt(Vx**2 + Vy**2)
-    
+    print(Vx.shape)
+    # Filter out anomalies
+    # for i in range(len(Vx)):
+    #     if velocity_magnitude[i] > 15:
+    #         Vx[i] = 0
+    #         Vy[i] = 0
+    #         velocity_magnitude[i] = 0
+
     # Create the velocity field plot
-    plt.figure(figsize=(10, 8))
+    # plt.figure(figsize=(10, 8))
+    plt.figure()
     quiver = plt.quiver(x, y, Vx, Vy, velocity_magnitude, angles='xy', scale_units='xy', scale=1, cmap='turbo', clim=(0, 15))
-    plt.colorbar(quiver, label='Velocity Magnitude')
-    plt.title(f'Velocity Field: {alpha}, {dt}, {mp_sp}, {resolution}, {overlap}, Time Mean: {time_mean}')
+    plt.colorbar(quiver, label='Velocity Magnitude [m/s]')
+    # plt.title(f'Mean velocity Field: {alpha}, {dt}')
     plt.xlabel('X')
     plt.ylabel('Y')
+    plt.gca().invert_yaxis()
     
     # Save the plot
     figures_path = os.path.join(os.getcwd(), 'PIV_Group17/Figures')
@@ -52,6 +61,7 @@ def plot_mean_x_component_vs_y(alpha_values, dt, mp_sp, resolution, overlap, x_t
     """
     # Initialize the plot
     plt.figure(figsize=(10, 8))
+    # plt.figure()
     
     for alpha in alpha_values:
         # Construct the folder name
@@ -79,9 +89,10 @@ def plot_mean_x_component_vs_y(alpha_values, dt, mp_sp, resolution, overlap, x_t
         plt.plot(Vx_values, y_values, 'o--', label=f'{alpha}')
     
     # Customize the plot
-    plt.title(f'Mean X Component of Flow vs Y Distance near X={x_target}')
+    # plt.title(f'Mean X Component of Flow vs Y Distance near X={x_target}')
     plt.ylabel('Y Distance')
-    plt.xlabel('Mean X Component of Flow (Vx)')
+    plt.xlabel('Mean X Component of Flow (Vx) [m/s]')
+    plt.gca().invert_yaxis()
     plt.legend()
     plt.grid(True)
     
@@ -92,10 +103,17 @@ def plot_mean_x_component_vs_y(alpha_values, dt, mp_sp, resolution, overlap, x_t
 
 
 plot_velocity_field('0deg', '75microseconds', 'MP', '32x32', '50ov', time_mean=True)
-plot_velocity_field('5deg', '75microseconds', 'MP', '32x32', '50ov', time_mean=True)
-plot_velocity_field('15deg', '75microseconds', 'MP', '32x32', '50ov', time_mean=True)
+plot_velocity_field('0deg', '75microseconds', 'SP', '32x32', '50ov', time_mean=False)
+# plot_velocity_field('5deg', '75microseconds', 'MP', '32x32', '50ov', time_mean=True)
+# plot_velocity_field('15deg', '75microseconds', 'MP', '32x32', '50ov', time_mean=True)
 
-plot_mean_x_component_vs_y(['0deg', '5deg', '15deg'], '75microseconds', 'MP', '32x32', '50ov', x_target=25)
-plot_mean_x_component_vs_y(['0deg', '5deg', '15deg'], '75microseconds', 'MP', '32x32', '50ov', x_target=100)
+# plot_velocity_field('15deg', '6microseconds', 'MP', '32x32', '50ov', time_mean=True)
 
+# plot_velocity_field('0deg', '75microseconds', 'SP', '16x16', '0ov', time_mean=False)
+# plot_velocity_field('0deg', '75microseconds', 'SP', '32x32', '0ov', time_mean=False)
+# plot_velocity_field('0deg', '75microseconds', 'SP', '64x64', '0ov', time_mean=False)
 
+# plot_mean_x_component_vs_y(['0deg', '5deg', '15deg'], '75microseconds', 'MP', '32x32', '50ov', x_target=25)
+# plot_mean_x_component_vs_y(['0deg', '5deg', '15deg'], '75microseconds', 'MP', '32x32', '50ov', x_target=100)
+
+# plot_velocity_field('0deg', '75microseconds', 'SP', '32x32', '50ov', time_mean=False)
