@@ -10,7 +10,24 @@ pixel_width = 0.15/1628; %
 % Read TIF Image Data
 % Create a Tif object and read data from the TIF file
 
-t = imread('B00004', 'tif');
+ts = {};
+
+% %% E=Average out the measurements
+% for i = 1:9
+%     ts{i} = imread('B0000'+string(i), 'tif');
+% end
+% 
+% % read the size of the actual image
+% [xmax,ymax] = size(ts{1});
+% 
+% t = zeros(xmax,ymax);
+% 
+% for i = 1:9
+%     t = uint16(t) + uint16(ts{i});
+% end
+
+
+t = imread('B00010', 'tif');
 
 % read the size of the actual image
 [xmax,ymax] = size(t);
@@ -36,7 +53,7 @@ t_b = t(xmax/2+1:end,:);
 t_enhanced_a = imadjust(t_a);
 t_enhanced_b = imadjust(t_b);
 
-% 
+
 % Display the splitted images in the same window
 figure;
 
@@ -55,7 +72,7 @@ title('Bottom Half of the Image (RGB)');
 [xmax,ymax] = size(t_a);
 
 % window size (should be selected appropriately)
-wsize = [32,32];
+wsize = [16,16];
 w_width = wsize(1);
 w_height = wsize(2);
 
@@ -118,7 +135,7 @@ for i=1:(w_xcount)
         
         % calculate the correlation
         correlation = normxcorr2(test_ima,test_imb);
-        [xpeak,ypeak] = find(correlation == max(correlation(:)));
+        [ypeak,xpeak] = find(correlation == max(correlation(:)));
         
         % Re-scaling
         xpeak1 = test_xmin+ xpeak - wsize(1)/2 - x_disp_max;
@@ -137,21 +154,51 @@ Vx = dpx.*pixel_width/dt;
 Vy = dpy.*pixel_width/dt;
 
 
+%Filter out non-phisical values per set limit
+
+V_x_max = 14;
+V_x_min = -5;
+
+V_y_max = 5;
+V_y_min = -5;
+
+
+% V_x_max = 20;
+% V_x_min = -10;
+% 
+% V_y_max = 10;
+% V_y_min = -10;
+
+for i = 1:length(Vx(1,:))
+    for j = 1:length(Vx(:,1))
+        if abs(Vx(j,i)) > V_x_max || abs(Vy(j,i)) > V_y_max || abs(Vx(j,i)) < V_x_min || abs(Vy(j,i)) < V_y_min
+            Vx(j,i) = 0;
+            Vy(j,i) = 0;
+        end
+    end
+end
+
 % display vector plot
 
-figure;
-quiver(dpy,-dpx)
+% figure;
+% quiver(dpx,dpy)
 
 figure;
-quiver(Vy,-Vx)
+quiver(flip(Vx),flip(Vy))
 
-average_dpx = mean2(dpx);
-avergae_dpy = mean2 (dpy);
+% average_dpx = mean2(dpx);
+% avergae_dpy = mean2 (dpy);
+% 
+% 
+% average_Vx = mean2(Vx);
+% avergae_Vy = mean2 (Vy);
 
+V = sqrt(Vx.^2+Vy.^2);
 
-average_Vx = mean2(Vx);
-avergae_Vy = mean2 (Vy);
-
+figure;
+imagesc(V);              % Display the matrix as an image
+colormap(jet);           % Apply the 'hot' colormap
+colorbar;                % Optional: add a colorbar to indicate the scale
 
 
 
