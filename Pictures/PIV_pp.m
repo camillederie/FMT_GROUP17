@@ -27,15 +27,17 @@ ts = {};
 % end
 
 
-t = imread('B00010', 'tif');
+t = imread('B00009', 'tif');
 
 % read the size of the actual image
 [xmax,ymax] = size(t);
 
-% % Display the original image
-% figure;
-% imshow(t);
-% title('Original Image (RGB)');
+
+
+% Display the original image
+figure;
+imshow(t);
+title('Original Image (RGB)');
 
 % % Display the contrast-enhanced image
 % figure;
@@ -46,6 +48,14 @@ t = imread('B00010', 'tif');
 
 t_a = t(1:xmax/2,:);
 t_b = t(xmax/2+1:end,:);
+
+
+%Filter out backgound noise
+
+
+% % Set values below the threshold to 0
+% t_a(t_a < mean(t_a,'all')) = 0;
+% t_b(t_b < mean(t_b,'all')*1.2) = 0;
 
 
 % % Increase the contrast of the images

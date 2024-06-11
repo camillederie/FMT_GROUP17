@@ -4,7 +4,7 @@ clear all;
 close all;
 
 dt = 75 * 10^-6; % Pulse interval
-pixel_width = 0.17 / 1628; % Pixel width = x_FOV/x_resolution
+pixel_width = 0.17 / 1628; % Pixel width
 
 % Read TIF Image Data
 % Create a Tif object and read data from the TIF file
@@ -107,6 +107,11 @@ for n = 1:9
     V_y_max = 5;
     V_y_min = -5;
 
+    % V_x_max = 20;
+    % V_x_min = -10;
+    % V_y_max = 10;
+    % V_y_min = -10;
+
     for i = 1:length(Vx(1, :))
         for j = 1:length(Vx(:, 1))
             if Vx(j, i) > V_x_max || abs(Vy(j, i)) > V_y_max || Vx(j, i) < V_x_min || abs(Vy(j, i)) < V_y_min
@@ -132,9 +137,13 @@ stacked_Vys = cat(3, Vys{:});
 stacked_Vs = cat(3, Vs{:});
 
 % %Trimmean to filter out outliers from mean computation
-Vx_a = trimmean(stacked_Vxs,95, 3);
+Vx_a = trimmean(stacked_Vxs,2, 3);
 Vy_a = trimmean(stacked_Vys,95, 3);
 V_a = trimmean(stacked_Vs,95, 3);
+
+% Vx_a = Vx;
+% Vy_a = Vy;
+% V_a = V;
 
 % Display results
 figure;
